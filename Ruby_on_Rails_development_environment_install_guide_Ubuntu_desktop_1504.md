@@ -39,8 +39,9 @@ Ubuntu desktop 15.04
 <pre>
   $ ssh-copy-id -i wsuser dtuser@desktop
   or
-  $ echo asahi.pub >> .ssh/authorized_keys
-  $ chmod 644 .ssh/authorized_keys
+  $ cat asahi.pub >> .ssh/authorized_keys
+
+  $ chmod 600 .ssh/authorized_keys
 </pre>
 * Change root password
 <pre>
