@@ -163,16 +163,17 @@ filetype plugin indent on
 "
 " see :h vundle for more details or wiki for FAQ
 " NOTE: comments after Bundle command are not allowed..
-
 " 編輯喜好設定
-syntax on       " 語法上色顯示
+syntax on
+" 語法上色顯示
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
 set noexpandtab
-set ruler       " 顯示右下角設定值
-set hlsearch        " 設定高亮度顯示搜尋結果
-
+set ruler
+" 顯示右下角設定值
+set hlsearch
+" 設定高亮度顯示搜尋結果
 " 自定義命令
 " define OpenURL (OSX)
 ":command -bar -nargs=1 OpenURL :!open &ltargs&gt
@@ -297,15 +298,11 @@ nmap \w <<C-w>C-w>w " Maping '\w' to Ctrl-w w (Window command) for Mac
     end
   $ vim app/views/pages/welcome.html.erb
 </pre>
-
-    <h1>Hello World!</h1>
-    <p/>
-    <h2>Rails Version:</h2>
-    <%= @version %>
-    <p/>
-    <h2>Environment:</h2>
-    <%= @env %>
-
+<pre>
+# add vars to file.
+  <%= @version %>
+  <%= @env %>
+</pre>
 <pre>
   $ vim config/routes.rb
 	root :to => "pages#welcome"::
