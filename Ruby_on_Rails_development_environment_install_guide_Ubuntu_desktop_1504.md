@@ -79,7 +79,8 @@ Ubuntu desktop 15.04
 </pre>
 * Install command tools
 <pre>
-  $ sudo apt-get install curl wget w3m unzip mc tree
+  $ sudo apt-get install curl wget w3m unzip mc tree markdown lynx-cur
+  # use "markdown somefile.md | lynx -stdin" for command line markdown viewer support.
 </pre>
 * Install git-flow
 <pre>
@@ -248,12 +249,11 @@ nmap \w <<C-w>C-w>w " Maping '\w' to Ctrl-w w (Window command) for Mac
     <<Directory /home/dtuser/workspace/railstest/public>Directory /home/dtuser/workspace/railstest/public>
         #Order allow,deny
         #Allow from all
-        #Require all granted
+        #AllowOverride all
+        #Options -MultiViews
         Options Indexes FollowSymLinks
         AllowOverride All
         Require all granted
-        #AllowOverride all
-        #Options -MultiViews
     <</Directory>/Directory>
     # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
     # error, crit, alert, emerg.
