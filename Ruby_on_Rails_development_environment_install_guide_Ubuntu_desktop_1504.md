@@ -39,8 +39,7 @@ Ubuntu desktop 15.04
 <pre>
   $ ssh-copy-id -i wsuser dtuser@desktop
   or
-  $ cat asahi.pub >> .ssh/authorized_keys
-
+  $ echo asahi.pub >> .ssh/authorized_keys
   $ chmod 600 .ssh/authorized_keys
 </pre>
 * Change root password
@@ -102,10 +101,12 @@ Ubuntu desktop 15.04
   $gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
   $ \curl -sSL https://get.rvm.io | bash -s stable
   (Check after install)
+  source rvm script.
+  $ rvm notes
 </pre>
 * Install libtool for yaml
 <pre>
-  $ sudo apt-get install libtool
+  $ sudo apt-get install libtool pkgconf
 </pre>
 * Install Ruby
 <pre>
@@ -145,10 +146,15 @@ Ubuntu desktop 15.04
   $ vim ~/.vimrc
 </pre>
 <pre>
-" 安裝 Vim Bundle Manager
+" alex's vimrc
 set nocompatible
 " VIM 不使用和 VI 相容的模式
+
 filetype off
+
+"
+" 安裝 Vim Bundle Manager
+"
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 Bundle 'gmarik/vundle'
@@ -156,6 +162,7 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-rails'
 Bundle 'tpope/vim-bundler'
 filetype plugin indent on
+
 "
 " Brief help
 " :BundleList          - list configured bundles
@@ -165,17 +172,23 @@ filetype plugin indent on
 "
 " see :h vundle for more details or wiki for FAQ
 " NOTE: comments after Bundle command are not allowed..
+
 " 編輯喜好設定
+
 syntax on
 " 語法上色顯示
+
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
 set noexpandtab
+
 set ruler
 " 顯示右下角設定值
+
 set hlsearch
 " 設定高亮度顯示搜尋結果
+
 " 自定義命令
 " define OpenURL (OSX)
 ":command -bar -nargs=1 OpenURL :!open &ltargs&gt
@@ -183,6 +196,7 @@ set hlsearch
 ":command -bar -nargs=1 OpenURL :!start cmd /cstart /b &ltargs&gt
 " define OpenURL (Linux)
 :command -bar -nargs=1 OpenURL :!firefox <targs>
+
 " Keymaping
 nmap \s :w<<cr>cr>
 nmap \q :q!<<cr>cr>
@@ -247,13 +261,13 @@ nmap \w <<C-w>C-w>w " Maping '\w' to Ctrl-w w (Window command) for Mac
     ServerAdmin webmaster@localhost
     DocumentRoot /home/dtuser/workspace/railstest/public
     <<Directory /home/dtuser/workspace/railstest/public>Directory /home/dtuser/workspace/railstest/public>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
         #Order allow,deny
         #Allow from all
         #AllowOverride all
         #Options -MultiViews
-        Options Indexes FollowSymLinks
-        AllowOverride All
-        Require all granted
     <</Directory>/Directory>
     # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
     # error, crit, alert, emerg.
@@ -296,14 +310,21 @@ nmap \w <<C-w>C-w>w " Maping '\w' to Ctrl-w w (Window command) for Mac
     def welcome
       @version=Rails.version
       @env=Rails.env
+      @current_time=Time.current
     end
   $ vim app/views/pages/welcome.html.erb
 </pre>
-<pre>
-# add vars to file.
-  <%= @version %>
-  <%= @env %>
-</pre>
+
+	<h1>Hello World!</h1>
+	<p/>
+	<h2>Rails Version:</h2>
+	<%= @version %>
+	<p/>
+	<h2>Environment:</h2>
+	<%= @env %>
+	<h2>Time:</h2>
+	<%= @current_time%>
+
 <pre>
   $ vim config/routes.rb
 	root :to => "pages#welcome"::
