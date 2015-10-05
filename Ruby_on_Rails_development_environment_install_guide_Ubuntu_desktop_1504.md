@@ -233,11 +233,16 @@ nmap \w <<C-w>C-w>w " Maping '\w' to Ctrl-w w (Window command) for Mac
 <pre>
   $ gem install passenger
   $ sudo apt-get install libcurl4-openssl-dev
-  $ sudo apt-get install apache2 apache2-prefork-dev
+  $ sudo apt-get install apache2 apache2-prefork-dev apache2-mpm-prefork
 </pre>
 * Install passenger module
 <pre>
   $ passenger-install-apache2-module  (change ruby version need to re-execute once)
+
+  # for backupground install passenger module.
+  $ nohup passenger-install-apache2-module --auto --languages ruby &
+  $ tail -f nohup.out
+
   $ sudo vim /etc/apache2/mods-available/rails.load  (new file)(replace ruby ver & passenger ver)(replace username to your home name)
   $ sudo vim /etc/apache2/mods-available/rails.conf  (new file)(replace ruby ver & passenger ver)(replace username to your home name)
   $ sudo vim /etc/apache2/sites-available/001-railstest.conf (new file)
@@ -289,7 +294,7 @@ nmap \w <<C-w>C-w>w " Maping '\w' to Ctrl-w w (Window command) for Mac
 </pre>
 * modify 000-default
 <pre>
-  $ sudo vim /etc/apache2/sites-available/000-default
+  $ sudo vim /etc/apache2/sites-available/000-default.conf
   # change port from "80" to "8080"
 </pre>
 * add listen port 8080
