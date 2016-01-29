@@ -36,10 +36,10 @@ Ubuntu desktop 15.04
   $ ssh-keygen -t rsa -C dtuser@desktop (don't use passphrase)
 </pre>
 * Copy workstation's id_rsa.pub to desktop authorized_keys
-<pre>
+<pre
   $ ssh-copy-id -i wsuser dtuser@desktop
   or
-  $ echo asahi.pub >> .ssh/authorized_keys
+  $ cat asahi.pub >> .ssh/authorized_keys
   $ chmod 600 .ssh/authorized_keys
 </pre>
 * Change root password
