@@ -12,7 +12,16 @@ Ubuntu Server 14.04 LTS on AWS EC2
 
 ## Configure Ubuntu
 * Start-up ubuntu instance
-* Upload workstation's id_rsa.pub to ubuntu server
+* add swap file
+<pre>
+  $ sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=1024
+  $ sudo /sbin/mkswap /var/swap.1
+  $ sudo /sbin/swapon /var/swap.1
+  $ sudo swapon -s
+  $ sudo vim /etc/fstab
+    /var/swap.1 swap swap defaults 0 0
+</pre>
+* Upload another workstation's id_rsa.pub to ubuntu server
 <pre>
   $ scp ~/.ssh/id_rsa.pub ubuntu@aws_ubuntu_server_name:user.pub
 </pre>
@@ -111,15 +120,15 @@ Ubuntu Server 14.04 LTS on AWS EC2
 </pre>
 * Install Rails
 <pre>
-  # rails 4.2.3
+  # rails 4.2.5.1
   $ vi ~/.gemrc
     gem: --no-ri --no-rdoc --no-document
   # Install node.js and dependence libraries
     $ sudo apt-get install nodejs nodejs-dev
   # Install Rails
-    $ gem install rails -v=4.2.3
+    $ gem install rails -v=4.2.5.1
     $ rails -v
-    $   Rails 4.2.3
+    $   Rails 4.2.5.1
 </pre>
 
 ## Install Vim and plugins
@@ -130,58 +139,55 @@ Ubuntu Server 14.04 LTS on AWS EC2
 * Install Vim's plugins manager
 <pre>
   $ mkdir -p ~/.vim/bundle
-  $ cd ~/.vim/bundle
-  $ git clone git://github.com/gmarik/vundle.git
+  $ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 </pre>
 * Install default vimrc
 <pre>
   $ vim ~/.vimrc
 </pre>
 <pre>
-" alex's vimrc
 set nocompatible
-" VIM 不使用和 VI 相容的模式
 
 filetype off
 
 "
-" 安裝 Vim Bundle Manager
+"Vim Bundle Manager
 "
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-Bundle 'gmarik/vundle'
-Bundle 'scrooloose/nerdtree'
-Bundle 'tpope/vim-rails'
-Bundle 'tpope/vim-bundler'
-filetype plugin indent on
-
+" $ mkdir -p ~/.vim/bundle
+" $ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+"
+"Plugin 'VundleVim/Vundle.vim'
+"Plugin 'gmarik/Vundle.vim'
+"
+"
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-rails'
+"
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use: filetype plugin on
 "
 " Brief help
-" :BundleList          - list configured bundles
-" :BundleInstall(!)    - install(update) bundles
-" :BundleSearch(!) foo - search(or refresh cache first) for foo
-" :BundleClean(!)      - confirm(or auto-approve) removal of unused bundles
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
 "
 " see :h vundle for more details or wiki for FAQ
-" NOTE: comments after Bundle command are not allowed..
-
-" 編輯喜好設定
+" Put your non-Plugin stuff after this line
 
 syntax on
-" 語法上色顯示
-
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
 set noexpandtab
-
 set ruler
-" 顯示右下角設定值
-
 set hlsearch
-" 設定高亮度顯示搜尋結果
 
-" 自定義命令
 " define OpenURL (OSX)
 ":command -bar -nargs=1 OpenURL :!open &ltargs&gt
 " define OpenURL (Windows)
@@ -190,30 +196,25 @@ set hlsearch
 :command -bar -nargs=1 OpenURL :!firefox <targs>
 
 " Keymaping
-nmap \s :w<<cr>cr>
-nmap \q :q!<<cr>cr>
-nmap \f <<C-f>C-f> " Maping '\f' to Ctrl-F (Page Down) for Mac
-nmap \b <<C-b>C-b> " Maping '\b' to Ctrl-B (Page Up) for Mac
-nmap \d <<C-d>C-d> " Maping '\d' to Ctrl-d (Half-Page Down) for Mac
-nmap \u <<C-u>C-u> " Maping '\u' to Ctrl-u (Half-Page Up) for Mac
-nmap \r <<C-r>C-r> " Maping '\r' to Ctrl-r (Redo) for Mac
-nmap \w <<C-w>C-w>w " Maping '\w' to Ctrl-w w (Window command) for Mac
+nmap \s :w<cr>
+nmap \q :q!<cr>
+nmap \f <C-f> " Maping '\f' to Ctrl-F (Page Down) for Mac
+nmap \b <C-b> " Maping '\b' to Ctrl-B (Page Up) for Mac
+nmap \d <C-d> " Maping '\d' to Ctrl-d (Half-Page Down) for Mac
+nmap \u <C-u> " Maping '\u' to Ctrl-u (Half-Page Up) for Mac
+nmap \r <C-r> " Maping '\r' to Ctrl-r (Redo) for Mac
+nmap \w <C-w>w " Maping '\w' to Ctrl-w w (Window command) for Mac
 </pre>
 
-* Install vim plugins and plugins help file
+* Install vim plugins and check plugins install
 <pre>
   $ vim
-    :BundleInstall
-    :h rails
+    :PluginInstall
+    :wq!
+  $ vim
+    :h vundle
     :h NERDTree
-    :h bundler
-</pre>
-* Check plugins install
-<pre>
-  $ vim
-    :Rails!
-    :NERDTree
-    :Bundle
+    :h rails
 </pre>
 
 * Install mysql & sqlite3 drivers
@@ -225,7 +226,7 @@ nmap \w <<C-w>C-w>w " Maping '\w' to Ctrl-w w (Window command) for Mac
 <pre>
   $ gem install passenger
   $ sudo apt-get install libcurl4-openssl-dev
-  $ sudo apt-get install apache2 apache2-prefork-dev apache2-mpm-prefork
+  $ sudo apt-get install apache2 apache2-dev apache2-mpm-prefork
 </pre>
 * Install passenger module
 <pre>
@@ -237,27 +238,27 @@ nmap \w <<C-w>C-w>w " Maping '\w' to Ctrl-w w (Window command) for Mac
 
   $ sudo vim /etc/apache2/mods-available/rails.load  (new file)(replace ruby ver & passenger ver)(replace username to your home name)
   $ sudo vim /etc/apache2/mods-available/rails.conf  (new file)(replace ruby ver & passenger ver)(replace username to your home name)
-  $ sudo vim /etc/apache2/sites-available/001-railstest.conf (new file)
+  $ sudo vim /etc/apache2/sites-available/001-rails.conf (new file)
 </pre>
 * `rails.load`
 <pre>
-  LoadModule passenger_module /home/dtuser/.rvm/gems/ruby-2.2.1/gems/passenger-5.0.15/buildout/apache2/mod_passenger.so
+   LoadModule passenger_module /home/ubuntu/.rvm/gems/ruby-2.2.1/gems/passenger-5.0.24/buildout/apache2/mod_passenger.so
 </pre>
 * `rails.conf`
  <pre>
-  <IfModule mod_passenger.c>
-    PassengerRoot /home/dtuser/.rvm/gems/ruby-2.2.1/gems/passenger-5.0.15
-    PassengerDefaultRuby /home/dtuser/.rvm/gems/ruby-2.2.1/wrappers/ruby
-  </IfModule> 
+   <IfModule mod_passenger.c>
+     PassengerRoot /home/ubuntu/.rvm/gems/ruby-2.2.1/gems/passenger-5.0.24
+     PassengerDefaultRuby /home/ubuntu/.rvm/gems/ruby-2.2.1/wrappers/ruby
+   </IfModule>
  </pre>
-* `001-railstest.conf`
+* `001-rails.conf`
 <pre>
   <<VirtualHost *:80>VirtualHost *:80>
     #ServerName www.example.com
 
     ServerAdmin webmaster@localhost
-    DocumentRoot /home/dtuser/workspace/railstest/public
-    <<Directory /home/dtuser/workspace/railstest/public>Directory /home/dtuser/workspace/railstest/public>
+    DocumentRoot /home/ubuntu/sites/rails-site/public
+    <<Directory /home/ubuntu/sites/rails-site/public>Directory /home/ubuntu/sites/rails-site/public>
         Options Indexes FollowSymLinks
         AllowOverride All
         Require all granted
@@ -287,23 +288,22 @@ nmap \w <<C-w>C-w>w " Maping '\w' to Ctrl-w w (Window command) for Mac
 * modify 000-default
 <pre>
   $ sudo vim /etc/apache2/sites-available/000-default.conf
-  # change port from "80" to "8080"
+  # change port from "80" to "8000"
 </pre>
-* add listen port 8080
+* add listen port 8000
 <pre>
   $ sudo vim /etc/apache2/ports.conf
-  # add "Listen 8080"
+  # add "Listen 8000"
 </pre>
 
-* Create rails test site
+* Create rails develop site
 <pre>
-  $ mkdir -p ~/workspace; cd ~/workspace
-  $ rails new railstest
-  $ cd railstest
+  $ mkdir -p ~/sites; cd ~/sites
+  $ rails new rails-site
+  $ cd rails
   $ bundle check
   $ bundle install
   $ rails generate controller pages
-  $ vim app/controllers/pages_controller.rb
     def welcome
       @version=Rails.version
       @env=Rails.env
@@ -311,8 +311,7 @@ nmap \w <<C-w>C-w>w " Maping '\w' to Ctrl-w w (Window command) for Mac
     end
   $ vim app/views/pages/welcome.html.erb
 </pre>
-
-	<h1>Hello World!</h1>
+	<h1>Hello Rails!</h1>
 	<p/>
 	<h2>Rails Version:</h2>
 	<%= @version %>
@@ -321,35 +320,47 @@ nmap \w <<C-w>C-w>w " Maping '\w' to Ctrl-w w (Window command) for Mac
 	<%= @env %>
 	<h2>Time:</h2>
 	<%= @current_time%>
-
 <pre>
   $ vim config/routes.rb
-	root :to => "pages#welcome"::
+  get '/version' => 'pages#welcome'
   $ RAILS_ENV=production rake secret
-    (GENERATED_CODE)
-  $ vim .bashrc
-	export SECRET_KEY_BASE=GENERATED_CODE
+    (GENERATED_CODE_STRING)
+  $ vim config/secrets
+	production:
+    secret_key_base: (GENERATED_CODE_STRING)
   $ source .bashrc
 <pre>
 #Add config/secrets.yml to version control and deploy again. You might need to remove a line from .gitignore so that you can commit the file.
 </pre>  
   $ sudo apache2ctl stop
-  $ rails server
+  $ rails server -b 0.0.0.0
   (Check rails WEBrick http server start on development mode, use http://127.0.0.1:3000 to browse the web page )
   Ctrl-C to shutdown server
 </pre>
-* Test web site in workstation
-** Restart apache2 service
+* Test web site in local
 <pre>
-  $ sudo a2enmod rails
-  $ sudo a2ensite 001-railstest
+  $ w3m http://localhost:3000/version
+</pre>
+* open port 80, 443, 8000, 3000
+<pre>
+  # AWS Console EC2 Security Group
+  # Inbound add tcp port 80, 443, 8000, 3000
+</pre>
+* Test web site in workstation
+<pre>
+  # browsing http://aws_ubuntu_host_public_ip:3000/version
+</pre>
+** Config & Restart apache2 service
+<pre>
   $ sudo apache2ctl stop
+  $ sudo a2enmod rails
+  $ sudo a2ensite 001-rails
   $ sudo apache2ctl start
-  $ w3m testsite
+  $ w3m http://localhost/version
   (Press  q y to exit)
 </pre>
 
-* Use browser open http://localhost
+* Use browser open http://aws_ubuntu_host_public_ip
 <pre>
-$ firefox http://localhost
+$ firefox http://aws_ubuntu_host_public_ip
 </pre>
